@@ -31,8 +31,6 @@ app.config['UPLOAD_FOLDER'] = 'static/uploads/'
 # Ensure the upload folder exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-# load up the saved/trained bottleneck model
-
 ImageFile.LOAD_TRUNCATED_IMAGES = True                 
 
 # extract pre-trained face detector
@@ -113,38 +111,46 @@ def classify_image(img_path, model):
     return answer
 
 
-def load_data_train_model():
-    def load_dataset(path):
-        data = load_files(path)
-        dog_files = np.array(data['filenames'])
-        dog_targets = np_utils.to_categorical(np.array(data['target']), 133)
-        return dog_files, dog_targets
+# def load_data_train_model():
+#     def load_dataset(path):
+#         data = load_files(path)
+#         dog_files = np.array(data['filenames'])
+#         dog_targets = np_utils.to_categorical(np.array(data['target']), 133)
+#         return dog_files, dog_targets
 
-    # load train, test, and validation datasets
-    train_files, train_targets = load_dataset('../dogImages/train')
-    valid_files, valid_targets = load_dataset('../dogImages/valid')
-    test_files, test_targets = load_dataset('../dogImages/test')
+#     # load train, test, and validation datasets
+#     train_files, train_targets = load_dataset('../dogImages/train')
+#     valid_files, valid_targets = load_dataset('../dogImages/valid')
+#     test_files, test_targets = load_dataset('../dogImages/test')
 
+#     bottleneck_features = np.load('../bottleneck_features/DogResNet50Data.npz')
+#     train_justinBottle = bottleneck_features['train']
+#     valid_justinBottle = bottleneck_features['valid']
+
+#     justinBottle_model = models.Sequential()
+#     justinBottle_model.add(layers.GlobalAveragePooling2D(input_shape=train_justinBottle.shape[1:]))
+#     justinBottle_model.add(layers.Dense(133, activation='softmax'))
+#     justinBottle_model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+#     checkpointer = ModelCheckpoint(filepath='../saved_models/weights.best.justinBottle.hdf5', 
+#                                 verbose=1, save_best_only=True)
+
+#     justinBottle_model.fit(train_justinBottle, train_targets, 
+#             validation_data=(valid_justinBottle, valid_targets),
+#             epochs=5, batch_size=20, callbacks=[checkpointer], verbose=1)
+#     justinBottle_model.load_weights('../saved_models/weights.best.justinBottle.hdf5')
+
+#     return justinBottle_model
+
+
+def load_justin_model(model_save_file='../saved_models/justin_model'):
     bottleneck_features = np.load('../bottleneck_features/DogResNet50Data.npz')
-    train_justinBottle = bottleneck_features['train']
-    valid_justinBottle = bottleneck_features['valid']
-
-    justinBottle_model = models.Sequential()
-    justinBottle_model.add(layers.GlobalAveragePooling2D(input_shape=train_justinBottle.shape[1:]))
-    justinBottle_model.add(layers.Dense(133, activation='softmax'))
-    justinBottle_model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
-    checkpointer = ModelCheckpoint(filepath='../saved_models/weights.best.justinBottle.hdf5', 
-                                verbose=1, save_best_only=True)
-
-    justinBottle_model.fit(train_justinBottle, train_targets, 
-            validation_data=(valid_justinBottle, valid_targets),
-            epochs=5, batch_size=20, callbacks=[checkpointer], verbose=1)
-    justinBottle_model.load_weights('../saved_models/weights.best.justinBottle.hdf5')
-
-    return justinBottle_model
+    test = bottleneck_features['test']
+    m = models.load_model(model_save_file)
+    p = [np.argmax(m.predict(np.expand_dims(feature, axis=0), verbose=0)) for feature in test]
+    return m
 
 
-justinBottle_model = load_data_train_model()
+justinBottle_model = load_justin_model()
 
 @app.route('/')
 def index():
