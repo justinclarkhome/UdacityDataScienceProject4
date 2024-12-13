@@ -7,7 +7,14 @@ The Jupyter notebook contains the required code and Q&A for the project itself. 
 ## Requirements
 - The code runs in Python, and a **environment.yml** file is provided to allow the creation of an Anaconda environment containing all the libraries used by the author. 
 	- **Note**: the author used an Apple M3 laptop that requries the Apple channel for TensorFlow/Keras support.
+	- If the user is not using an Apple silicon platform, remove the 'Apple' channel at the top of the YAML file (and install TensorFlow/Keras as necessary for your platform).
+	- **Note**: I uploaded this code to the Udacity virtual Jupyer virtual instance, but got repeated kernel crashes while pre-processing the image data. This is why I moved the code to Github.
 - To create the environment, run "conda env create -f environment.yml".
+- Some data files are required, but too large to store in Github:
+	- In 'dogImages', download [this])https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/dogImages.zip)and extract.
+	- In 'lfw', downlaod [this](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/lfw.zip) and extract.
+	- In 'bottleneck_features', download [this](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/DogVGG16Data.npz) and [this](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/DogResnet50Data.npz).
+	- Run the dog_app.ipnb file in its entirety, which will save a model in the 'saved_models' directory, which the web app will load.
 
 ## Running the web app
 - From the app directory, run "python app.py" to launch the web app.
