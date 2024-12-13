@@ -25,8 +25,6 @@ app.config['USER_IMAGE_UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # create that folder, if it doesn't exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# ImageFile.LOAD_TRUNCATED_IMAGES = True                 
-
 #################################################################################
 ##### Define items needed for model to make predictions on arbitrary images #####
 #################################################################################
@@ -141,7 +139,7 @@ def load_justin_model(model_save_file='../saved_models/justin_model'):
     Returns:
         object: An instance of the saved model.
     """
-    bottleneck_features = np.load('../bottleneck_features/DogResNet50Data.npz')
+    bottleneck_features = np.load('../bottleneck_features/DogResnet50Data.npz')
     test = bottleneck_features['test']
     
     # load the on-disk model (this is defined/generated/saved in the ipynb file)
