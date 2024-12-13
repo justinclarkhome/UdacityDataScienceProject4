@@ -12,22 +12,26 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <!-- Do I need a jumbotron thingy here? -->
-    <!-- <nav class="navbar navbar-inverse navbar-fixed-top"> -->
-        <!-- <div class="container">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="/">Disaster Response: Udacity DSND Project 2</a>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div>
+                <a class="navbar-brand" href="https://github.com/justinclarkhome/UdacityDataScienceProject4">Udacity DSND Project 4: Dog Breed Classification</a>
             </div>
-            <div id="navbar" class="collapse navbar-collapse">
+            <div>
                 <ul class="nav navbar-nav">
                     <li><a href="https://www.linkedin.com/in/justin-clark-4574164/">Justin's LinkedIn</a></li>
                     <li><a href="https://github.com/justinclarkhome">Justin's GitHub</a></li>
                 </ul>
             </div>
         </div>
-    </nav> -->
+    </nav>
+        
+    <div class="jumbotron">
+        <!-- <h1 class="display-4">Hello, world!</h1> -->
+        <p class="lead">This interface allows you to upload an image file, and the model will attempt to detect dogs and humans,
+            and use a model to predict the breed that the dog - or person - most resembles.</p>
+        <hr class="my-4">
 
-    <div class="container mt-5">
         <h1 class="text-center">Upload an Image</h1>
         <form action="/upload" method="post" enctype="multipart/form-data" class="mt-4">
             <div class="form-group">
@@ -35,7 +39,6 @@
             </div>
             <button type="submit" class="btn btn-primary">Upload</button>
         </form>
-
         {% if filename %}
             <div class="mt-5">
                 <p>{{ image_info }}</p>

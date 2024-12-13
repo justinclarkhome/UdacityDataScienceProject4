@@ -1,23 +1,15 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect
 from werkzeug.utils import secure_filename
 from PIL import Image
 import os, sys
 import plotly.express as px
 import plotly.io as pio
 from tensorflow.keras import models
-from sklearn.datasets import load_files
-from tensorflow.keras import utils as np_utils
 import numpy as np
 from glob import glob
-from tensorflow.keras import layers, models
-import numpy as np
-from keras.callbacks import ModelCheckpoint
 import cv2
 from keras.preprocessing import image                  
-from tqdm import tqdm
-from keras.applications.resnet50 import preprocess_input
-from keras.applications.resnet50 import ResNet50
-from PIL import ImageFile                            
+from keras.applications.resnet50 import ResNet50, preprocess_input
 
 sys.path.append('../')
 from extract_bottleneck_features import extract_Resnet50
@@ -33,7 +25,7 @@ app.config['USER_IMAGE_UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # create that folder, if it doesn't exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-ImageFile.LOAD_TRUNCATED_IMAGES = True                 
+# ImageFile.LOAD_TRUNCATED_IMAGES = True                 
 
 #################################################################################
 ##### Define items needed for model to make predictions on arbitrary images #####
@@ -96,11 +88,6 @@ def path_to_tensor(img_path):
     return np.expand_dims(x, axis=0)
 
 
-def paths_to_tensor(img_paths):
-    list_of_tensors = [path_to_tensor(img_path) for img_path in tqdm(img_paths)]
-    return np.vstack(list_of_tensors)
-
-
 def classify_image(img_path, model):
     """ Wrapper function to predict dog breed from an image using supplied model.
     The function will attempt to detect both dogs and people in the image. In either
@@ -146,13 +133,28 @@ def classify_image(img_path, model):
 
 
 def load_justin_model(model_save_file='../saved_models/justin_model'):
+    """ Load and return saved model for the image classification task.
+
+    Args:
+        model_save_file (str, optional): Path to stored model. Defaults to '../saved_models/justin_model'.
+
+    Returns:
+        object: An instance of the saved model.
+    """
     bottleneck_features = np.load('../bottleneck_features/DogResNet50Data.npz')
     test = bottleneck_features['test']
-    m = models.load_model(model_save_file)
+    
+    # load the on-disk model (this is defined/generated/saved in the ipynb file)
+    try:
+        m = models.load_model(model_save_file)
+    except:
+        print('Model could not be loaded. Run the dog_app.ipynb notebook to generate and save it.')
+
+    # the loaded model doesn't process uploaded images properly, unless this line is run. I'm not sure why.
     p = [np.argmax(m.predict(np.expand_dims(feature, axis=0), verbose=0)) for feature in test]
     return m
 
-
+# load the model (global scope so all functions can access it)
 justinBottle_model = load_justin_model()
 
 @app.route('/')
@@ -169,15 +171,14 @@ def upload_file():
     if file:
         filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['USER_IMAGE_UPLOAD_FOLDER'], filename)
-        file.save(file_path)
+
+        file.save(file_path) # store the user's uploaded file locally
         
         # After the user uploads the file, predict the breed from it
         breed = classify_image(file_path, justinBottle_model)
-        print(breed)
 
         # Process the image (example: get image size)
         image = Image.open(file_path)
-        image_info = f"Image size: {image.size[0]}x{image.size[1]}"
         
         # Display the image the user uploaded
         fig = px.imshow(image, title=breed)
@@ -192,9 +193,9 @@ def upload_file():
         return render_template(
             'index.html', 
             filename=filename, 
-            image_info=image_info, 
             plot_html=plot_html,
             )
+
 
 if __name__ == '__main__':
     app.run(debug=True)
