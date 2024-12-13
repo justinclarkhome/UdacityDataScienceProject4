@@ -6,26 +6,18 @@ import plotly.express as px
 import plotly.io as pio
 from tensorflow.keras import models
 from sklearn.datasets import load_files
-from keras import utils as np_utils
+from tensorflow.keras import utils as np_utils
 import numpy as np
-import pandas as pd
 from glob import glob
-import tensorflow as tf
 from tensorflow.keras import layers, models
-from sklearn.base import BaseEstimator, TransformerMixin
 import numpy as np
-from keras.regularizers import l1, l2
-from keras.layers import Conv2D, MaxPooling2D, GlobalAveragePooling2D
-from keras.layers import Dropout, Flatten, Dense
-from keras.models import Sequential
-from keras.callbacks import ModelCheckpoint, EarlyStopping
+from keras.callbacks import ModelCheckpoint
 import cv2
 from keras.preprocessing import image                  
 from tqdm import tqdm
-from keras.applications.resnet50 import preprocess_input, decode_predictions
+from keras.applications.resnet50 import preprocess_input
 from keras.applications.resnet50 import ResNet50
 from PIL import ImageFile                            
-from keras.callbacks import ModelCheckpoint  
 
 sys.path.append('../')
 from extract_bottleneck_features import extract_Resnet50
@@ -40,15 +32,16 @@ app.config['UPLOAD_FOLDER'] = 'static/uploads/'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # load up the saved/trained bottleneck model
-justinBottle_model = models.load_model('../saved_models/justinBottle.tf')
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True                 
 
 # extract pre-trained face detector
 face_cascade = cv2.CascadeClassifier('../haarcascades/haarcascade_frontalface_alt.xml')
 
+
 # define ResNet50 model
 ResNet50_model = ResNet50(weights='imagenet')
+
 
 # returns "True" if face is detected in image stored at img_path
 def face_detector(img_path):
@@ -57,10 +50,12 @@ def face_detector(img_path):
     faces = face_cascade.detectMultiScale(gray)
     return len(faces) > 0
 
+
 ### returns "True" if a dog is detected in the image stored at img_path
 def dog_detector(img_path):
     prediction = ResNet50_predict_labels(img_path)
     return ((prediction <= 268) & (prediction >= 151)) 
+
 
 def path_to_tensor(img_path):    
     # loads RGB image as PIL.Image.Image type
@@ -82,7 +77,7 @@ def ResNet50_predict_labels(img_path):
     return np.argmax(ResNet50_model.predict(img, verbose=False))
 
 
-def predict_breed_from_image(img_path):
+def predict_breed_from_image(img_path, model):
     """ Predict dog breed from image,
 
     Args:
@@ -94,12 +89,12 @@ def predict_breed_from_image(img_path):
     # extract bottleneck features
     bottleneck_feature = extract_Resnet50(path_to_tensor(img_path))
     # obtain predicted vector
-    predicted_vector = justinBottle_model.predict(bottleneck_feature)
+    predicted_vector = model.predict(bottleneck_feature)
     # return dog breed that is predicted by the model
     return dog_names[np.argmax(predicted_vector)]    
 
 
-def classify_image(img_path):
+def classify_image(img_path, model):
     # dog detected...
     is_dog = dog_detector(img_path)
 
@@ -107,7 +102,7 @@ def classify_image(img_path):
     is_human = face_detector(img_path)
 
     if is_dog or is_human:
-        breed = predict_breed_from_image(img_path)
+        breed = predict_breed_from_image(img_path, model)
         if is_dog:
             answer = f'{img_path} contains a dog that looks like a: {breed}'
         else:
@@ -118,6 +113,38 @@ def classify_image(img_path):
     return answer
 
 
+def load_data_train_model():
+    def load_dataset(path):
+        data = load_files(path)
+        dog_files = np.array(data['filenames'])
+        dog_targets = np_utils.to_categorical(np.array(data['target']), 133)
+        return dog_files, dog_targets
+
+    # load train, test, and validation datasets
+    train_files, train_targets = load_dataset('../dogImages/train')
+    valid_files, valid_targets = load_dataset('../dogImages/valid')
+    test_files, test_targets = load_dataset('../dogImages/test')
+
+    bottleneck_features = np.load('../bottleneck_features/DogResNet50Data.npz')
+    train_justinBottle = bottleneck_features['train']
+    valid_justinBottle = bottleneck_features['valid']
+
+    justinBottle_model = models.Sequential()
+    justinBottle_model.add(layers.GlobalAveragePooling2D(input_shape=train_justinBottle.shape[1:]))
+    justinBottle_model.add(layers.Dense(133, activation='softmax'))
+    justinBottle_model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+    checkpointer = ModelCheckpoint(filepath='../saved_models/weights.best.justinBottle.hdf5', 
+                                verbose=1, save_best_only=True)
+
+    justinBottle_model.fit(train_justinBottle, train_targets, 
+            validation_data=(valid_justinBottle, valid_targets),
+            epochs=5, batch_size=20, callbacks=[checkpointer], verbose=1)
+    justinBottle_model.load_weights('../saved_models/weights.best.justinBottle.hdf5')
+
+    return justinBottle_model
+
+
+justinBottle_model = load_data_train_model()
 
 @app.route('/')
 def index():
@@ -135,7 +162,8 @@ def upload_file():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
         
-        breed = classify_image(file_path)
+        print(file_path)
+        breed = classify_image(file_path, justinBottle_model)
         print(breed)
 
         # Process the image (example: get image size)
