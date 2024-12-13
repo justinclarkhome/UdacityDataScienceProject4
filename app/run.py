@@ -7,9 +7,12 @@ from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar, Histogram
 import joblib
 import plotly.graph_objs as go
-
+import os
 
 app = Flask(__name__)
+USER_IMAGE_UPLOAD_DIR = './user_images'
+if not os.path.exists(USER_IMAGE_UPLOAD_DIR):
+    os.mkdir(USER_IMAGE_UPLOAD_DIR)
 
 
 # index webpage displays cool visuals and receives user input text for model

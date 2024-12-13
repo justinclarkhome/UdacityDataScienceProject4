@@ -29,6 +29,10 @@
     </div>
 </nav>
 
+<!-- <form method="POST" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <button type="submit">Upload</button>
+</form> -->
 
 <div class="jumbotron">
     <div class="container">
@@ -37,14 +41,20 @@
         <hr />
       
         <div class="row">
-            <div class="col-lg-12 form-group-lg">
+            <form action="/go" method="get">
+                <div class="mb-3">
+                    <label for="formFile" class="form-label">Default file input example</label>
+                    <input class="form-control" type="file" id="formFile" name="user_file">
+                </div>            
+            </form>
+            <!-- <div class="col-lg-12 form-group-lg">
                 <form action="/go" method="get">
                     <input type="text" class="form-control form-control-lg" name="query" placeholder="Enter a message here">
                     <div class="col-lg-offset-5">
-                        <button type="submit" class="btn btn-lg btn-success">Classify Message</button>
+                        <button type="submit" class="btn btn-lg btn-success">Upload</button>
                     </div>
                 </form>
-            </div>
+            </div> -->
         </div>
 
         {% block message %}
