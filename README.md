@@ -8,7 +8,7 @@ The Jupyter notebook contains the required code and Q&A for the project itself. 
 - The code runs in Python, and a **environment.yml** file is provided to allow the creation of an Anaconda environment containing all the libraries used by the author. 
 	- **Note**: the author used an Apple M3 laptop that requries the Apple channel for TensorFlow/Keras support.
 	- If the user is not using an Apple silicon platform, remove the 'Apple' channel at the top of the YAML file and remove the 'tensorflow-macos' and 'tensorflow-metal' lines in the pip section at the bottom (and install TensorFlow/Keras as necessary for your platform).
-	- If not using conda, you will need to at least install numpy, tensorflow, scikit-learn, and opencv (which may be via opencv-python-headless or similar, depending on your platform).
+	- If not using conda, you will need to at least install numpy, tensorflow, scikit-learn, plotly,flask, matplotlib and opencv (which may be via opencv-python-headless or similar, depending on your platform).
 	- **Note**: I uploaded this code to the Udacity virtual Jupyer virtual instance, but got repeated kernel crashes while pre-processing the image data. This is why I moved the code to Github.
 - To create the environment, run "conda env create -f environment.yml".
 - Some data files are required, but too large to store in Github.
