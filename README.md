@@ -19,7 +19,7 @@ The Jupyter notebook contains the required code and Q&A for the project itself. 
 		- Create a directory in the root of the repo called 'dogImages', download [this](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/dogImages.zip) and extract it in that directory.
 		- Create a directory in the root of the repo called 'lfw', downlaod [this](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/lfw.zip) and extract it in that directory.
 		- Create a directory in the root of the repo called 'bottleneck_features', and download [this](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/DogVGG16Data.npz) and [this](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/DogResnet50Data.npz) into that directory.
-- Run the dog_app.ipnb file in its entirety, which will save a model in the 'saved_models' directory, which the web app will load.
+- The trained model is stored in the repo in the saveed_models directory. The web app will load the model from there. Alternatively, rRun the dog_app.ipnb file in its entirety, which will re-save the model in that location.
 
 ## Running the web app
 - From the app directory, run "python app.py" to launch the web app.
