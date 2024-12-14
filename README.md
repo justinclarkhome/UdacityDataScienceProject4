@@ -1,10 +1,14 @@
 [This repo](https://github.com/justinclarkhome/UdacityDataScienceProject4?tab=readme-ov-file) stores code supporting my work for the capstone project of the Udacity Data Scientist nanodegree program.
 
-# Problem statement/goal
+# Problem Statement/Goal/Background
 
 The goal of the project is develop a convolutional neutral network (CNN) to detect the breed of a dog based on an image containing a dog. The code will take in an image, determine if a dog - or a person - is in the image, and then provide a prediction of the breed that the dog - or the person! - most resembles.
 
 The Jupyter notebook contains the required code and Q&A for the project itself. When the notebook runs, it will build and save a CNN model (via bottleneck) that is then utilized a web app, where a user can upload an arbitrary image and obtain a breed prediction. There is also an HTML rendering of the executed notebook, for reference.
+
+The data for the project - the training/validation/testing images - have been provided by Udacity. Links to them can be found [here](https://github.com/udacity/dog-project). The Udacity repo also contains the template for the proejct notebook (dog_app.ipynb) which is built upon in this author's repo.
+
+The model created by the author is a Keras Sequenctial moodel: a convolutional neural network that is built up sequentially (layer by layer). The author experiment with the design of this model, including the number of layers and the parameters for each later, using accuracy - the "hit rate" of the class predictions against the true/known values - as the key metric for training the model and evaluating the results.
 
 ## Requirements
 - The code runs in Python, and a **environment.yml** file is provided to allow the creation of an Anaconda environment containing all the libraries used by the author. 
