@@ -22,7 +22,7 @@ The Jupyter notebook contains the required code and Q&A for the project itself. 
 ## Running the web app
 - From the app directory, run "python app.py" to launch the web app.
 - Allow a few seconds for the model to load, and then click the URL the terminal shows to access the webapp.
-- From there, you can upload an arbitrary image.
+- From there, you can upload an arbitrary image: several are located in the 'downloaded_test_images' directory of this repo (4 of dogs, 2 of humans, and one with neither).
 
 # Acknowledgements
 The author's experience with CNNs was limited prior to working on this project, and several sources were VERY helpful in working through the various sections of code:
