@@ -12070,17 +12070,26 @@ No dog or human was detected in this image: ./downloaded_test_images/not_dog_not
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span> 
-</pre></div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h1 id="Conclusions">Conclusions<a class="anchor-link" href="#Conclusions">¶</a></h1><p>The trained bottleneck model has a testing accuracy of 81.7%, which is a substantial improvement over the from-scratch model's accuracy of about 6%. While selecting images of people and dogs and uploading them to the web app for visual inspection, the results seem reasonable for the images of dogs. For images of people, the interpretation is more subjective (and humorous) - but perhaps not a stretch to see how broad similarities in human faces can relate to those of dogs. For example, features such as angularity (in the case of Clint Eastwood) or roundness (in the case of Mary Tyler Moore) are traits that can also be seen in the dog breed pictures.</p>
+<p>While the accuracy is high, the model is still simplistic. For example, refinements could be made that first apply the human face/dog filter to determine which is present (or if both, or neither) are present. Then a parallel model could be trained on images of humans to classify them separately, such as by gender or hair color. If both humans and dogs are present in a photo, such a model could have separate predictions for each. This would require substantially more training data (images of each grouping, e.g. of dogs, people and both). The neural networks involved in such an ensemble would also need to be refined/tuned to allow them to pick up on the intended features of each group.</p>
+<p>It is also worth nothing that training such models is very compute intensive, although the bottlneck process eases this burden substantially (while requiring the identifiation and downloading of an existing trained model that is suited for the intended goal of classifying images of dogs and people).</p>
 </div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 </div>
 </div>
 </div>
