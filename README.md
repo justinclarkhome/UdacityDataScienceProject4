@@ -7,15 +7,16 @@ The Jupyter notebook contains the required code and Q&A for the project itself. 
 ## Requirements
 - The code runs in Python, and a **environment.yml** file is provided to allow the creation of an Anaconda environment containing all the libraries used by the author. 
 	- **Note**: the author used an Apple M3 laptop that requries the Apple channel for TensorFlow/Keras support.
-	- If the user is not using an Apple silicon platform, remove the 'Apple' channel at the top of the YAML file (and install TensorFlow/Keras as necessary for your platform).
+	- If the user is not using an Apple silicon platform, remove the 'Apple' channel at the top of the YAML file and remove the 'tensorflow-macos' and 'tensorflow-metal' lines in the pip section at the bottom (and install TensorFlow/Keras as necessary for your platform).
+	- If not using conda, you will need to at least install numpy, tensorflow, scikit-learn, and opencv (which may be via opencv-python-headless or similar, depending on your platform).
 	- **Note**: I uploaded this code to the Udacity virtual Jupyer virtual instance, but got repeated kernel crashes while pre-processing the image data. This is why I moved the code to Github.
 - To create the environment, run "conda env create -f environment.yml".
 - Some data files are required, but too large to store in Github.
 	- If you are on MacOS or Linux, you can run the download_externel_data.sh script to download the required external data, e.g. "sh ./download_external_data.sh" from the command line. This will take several minutes!
 	- Otherwise, you can do this manually:
-		- In 'dogImages', download [this](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/dogImages.zip) and extract.
-		- In 'lfw', downlaod [this](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/lfw.zip) and extract.
-		- In 'bottleneck_features', download [this](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/DogVGG16Data.npz) and [this](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/DogResnet50Data.npz).
+		- Create a directory in the root of the repo called 'dogImages', download [this](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/dogImages.zip) and extract it in that directory.
+		- Create a directory in the root of the repo called 'lfw', downlaod [this](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/lfw.zip) and extract it in that directory.
+		- Create a directory in the root of the repo called 'bottleneck_features', and download [this](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/DogVGG16Data.npz) and [this](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/DogResnet50Data.npz) into that directory.
 - Run the dog_app.ipnb file in its entirety, which will save a model in the 'saved_models' directory, which the web app will load.
 
 ## Running the web app
